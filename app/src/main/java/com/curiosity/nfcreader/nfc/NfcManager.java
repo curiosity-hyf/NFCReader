@@ -15,6 +15,7 @@ Additional permission under GNU GPL version 3 section 7 */
 
 package com.curiosity.nfcreader.nfc;
 
+import static android.nfc.NfcAdapter.EXTRA_NDEF_MESSAGES;
 import static android.nfc.NfcAdapter.EXTRA_TAG;
 import static android.os.Build.VERSION_CODES.GINGERBREAD_MR1;
 import static android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH;
@@ -29,6 +30,8 @@ import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.IsoDep;
 import android.nfc.tech.NfcF;
+import android.os.Parcelable;
+import android.util.Log;
 
 import com.curiosity.nfcreader.nfc.reader.ReaderListener;
 import com.curiosity.nfcreader.nfc.reader.ReaderManager;
@@ -82,19 +85,21 @@ public final class NfcManager {
 	}
 
 	public boolean updateStatus() {
-
 		int sta = getStatus();
 		if (sta != status) {
 			status = sta;
 			return true;
 		}
-
 		return false;
 	}
 
 	public boolean readCard(Intent intent, ReaderListener listener) {
-		final Tag tag = (Tag) intent.getParcelableExtra(EXTRA_TAG);
-		if (tag != null) {
+        Log.d("mytest", intent.getAction());
+		final Tag tag = intent.getParcelableExtra(EXTRA_TAG);
+        if (tag != null) {
+            for(String s : tag.getTechList()) {
+                Log.d("mytest", "TechList: " + s);
+            }
 			ReaderManager.readCard(tag, listener);
 			return true;
 		}

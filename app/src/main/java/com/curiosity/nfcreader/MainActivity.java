@@ -59,6 +59,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	public void setIntent(Intent intent) {
+        Log.d("mytest", "setIntent: " + intent.getAction());
 		if (NfcPage.isSendByMe(intent))
 			loadNfcPage(intent);
 		else if (AboutPage.isSendByMe(intent))
@@ -75,6 +76,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onResume() {
+        Log.d("mytest", "onResume");
 		super.onResume();
 		nfc.onResume();
 	}
@@ -104,12 +106,10 @@ public class MainActivity extends Activity {
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		Log.d("mytest", "onNewIntent " + intent.toString());
-		if (!nfc.readCard(intent, new NfcPage(this))) {
-            Log.d("mytest", "onNewIntent " + "loadDefaultPage");
+        Log.d("mytest", "onNewIntent: " + intent.toString());
+		boolean res = nfc.readCard(intent, new NfcPage(this));
+		if (!res) {  // 如果 不是 nfc intent 或者 读取失败 则加载主界面
             loadDefaultPage();
-        } else {
-            Log.d("mytest", "onNewIntent " + "no");
         }
 	}
 
@@ -247,10 +247,10 @@ public class MainActivity extends Activity {
 	private void initViews() {
 		board = (ViewSwitcher) findViewById(R.id.switcher); // 视图切换器
 
-//		Typeface tf = ThisApplication.getFontResource(R.string.font_oem1);
+//		Typeface tf = ThisApplication.getFontResource(R.string.font_oem1); // 加载字体
 //		Log.d("mytest", "!!!!!!!!!!" + (tf==null));
 		TextView tv = (TextView) findViewById(R.id.txtAppName);
-//		tv.setTypeface(tf);
+//		tv.setTypeface(tf); // 设置字体
 
 //		tf = ThisApplication.getFontResource(R.string.font_oem2);
 
